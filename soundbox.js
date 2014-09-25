@@ -32,8 +32,10 @@ var ball = {},
 ball = {
 
   // sound components.  Metaphor is ball = sound generator.
+  // any of these can be overridden by object settings.
+  pitch: 440,
   amp: 0,
-  wave: "sawtooth",  //currently being overridden when ball strikes wall.  Flexibility!
+  wave: "sawtooth",
 
   // ball position.  Starting values are center of canvas.
   x: W/2,
@@ -82,8 +84,8 @@ function update() {
     ball.y = H - ball.radius;
     ball.vy *= -bounceFactor;
     // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
-    ballSound0.makeSound(400, "sawtooth");
-    // call sound with pitch assigned to wall object.
+    ballSound0.makeSound(400, "sawtooth", 1);
+    // call sound with pitch and wave assigned to wall object.
   }
   // ceiling rebound
   if(ball.y - ball.radius < 0) {
@@ -91,8 +93,8 @@ function update() {
     ball.y = 0 + ball.radius;
     ball.vy *= -bounceFactor;
     // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
-    ballSound0.makeSound(200, "square");
-    // call sound with pitch assigned to wall object.
+    ballSound0.makeSound(200, "square", 1);
+    // call sound with pitch and wave assigned to wall object.
   }
   // left rebound
   if(ball.x - ball.radius < 0) {
@@ -100,6 +102,8 @@ function update() {
     ball.x = 0 + ball.radius;
     ball.vx *= -bounceFactor;
     // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
+    ballSound0.makeSound(800, "sine", 1);
+    // call sound with pitch and wave assigned to wall object.
   }
   // right rebound
   if(ball.x + ball.radius > W) {
@@ -107,6 +111,8 @@ function update() {
     ball.x = W - ball.radius;
     ball.vx *= -bounceFactor;
     // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
+    ballSound0.makeSound(800, "triangle", 1);
+    // call sound with pitch and wave assigned to wall object.
   }
 }
 
@@ -125,11 +131,11 @@ var audioContext = new webkitAudioContext();
     this.osc.connect(this.gainNode);
     this.gainNode.connect(audioContext.destination);
   },
-  makeSound: function(pitch, wave){
+  makeSound: function(pitch, wave, amp){
     var now = audioContext.currentTime;
     this.osc.type = wave;
     this.osc.frequency.setValueAtTime(pitch, now);
-    ball.amp = 1;
+    ball.amp = amp;
     this.gainNode.gain.setValueAtTime(ball.amp, now);
   }
 }
