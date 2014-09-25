@@ -1,4 +1,7 @@
-// Now some basic canvas stuff. Here we'll make a variable for the canvas and then initialize its 2d context for drawing
+// Initial box + ball code came from http://cssdeck.com/labs/lets-make-a-bouncing-ball-in-html5-canvas
+// No man is an island ;-)
+
+// Create canvas then initialize its 2d context for drawing
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext("2d");
 
@@ -22,16 +25,24 @@ var ball = {},
 // 2) Radius and color
 // 3) Velocity vectors
 // 4) the method to draw or paint it on the canvas
+// 5) draw method will also update sound components.  At 60fps will update every 16.67 ms, without having to have a seperate timer :-)
 
 ball = {
+
+  // sound components.  Metaphor is ball = sound generator.
+  amp: 0,
+
+
+  // ball position.  Starting values are center of canvas.
   x: W/2,
   y: 50,
 
+  // ball size and color
   radius: 15,
   color: "red",
 
-  // Velocity components
-  vx: 0,
+  // velocity components
+  vx: 1,
   vy: 1,
 
   draw: function() {
@@ -41,6 +52,8 @@ ball = {
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
+    this.amp = this.amp - .01;
+    newSound0.gainNode.gain.setValueAtTime(this.amp,audioContext.currentTime);
   }
 };
 
@@ -50,36 +63,80 @@ function clearCanvas() {
   ctx.clearRect(0, 0, W, H);
 }
 
-// A function that will update the position of the ball is also needed. Lets create one
+// A function that will update the position of the ball is also needed.
 function update() {
   clearCanvas();
   ball.draw();
 
-  // Now, lets make the ball move by adding the velocity vectors to its position
+  // make the ball move by adding the velocity vectors to its position
   ball.y += ball.vy;
+  ball.x += ball.vx;
   // Ohh! The ball is moving!
   // Lets add some acceleration
   ball.vy += gravity;
-  //Perfect! Now, lets make it rebound when it touches the floor
+  //  floor rebound
   if(ball.y + ball.radius > H) {
-    // First, reposition the ball on top of the floor and then bounce it!
+    // reposition the ball on top of the floor and bounce it
     ball.y = H - ball.radius;
     ball.vy *= -bounceFactor;
-    // The bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
+    // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
+    newSound0.makeSound(400, 0, 3);
   }
-  // Now, lets make it rebound when it touches the ceiling
+  // ceiling rebound
   if(ball.y - ball.radius < 0) {
-    // First, reposition the ball on top of the floor and then bounce it!
+    // reposition the ball on top of the floor and bounce it
     ball.y = 0 + ball.radius;
     ball.vy *= -bounceFactor;
-    // The bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
+    // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
+  }
+  // left rebound
+  if(ball.x - ball.radius < 0) {
+    // reposition the ball on top of the floor and bounce it
+    ball.x = 0 + ball.radius;
+    ball.vx *= -bounceFactor;
+    // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
+  }
+  // right rebound
+  if(ball.x + ball.radius > W) {
+    // reposition the ball on top of the floor and bounce it
+    ball.x = W - ball.radius;
+    ball.vx *= -bounceFactor;
+    // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
   }
 }
 
-// Now, the animation time!
-// in setInterval, 1000/x depicts x fps! So, in this casse, we are aiming for 60fps for smoother animations.
+// in setInterval, 1000/x depicts x fps.  Set to 60fps for smoother animations.
 setInterval(update, 1000/60);
 
-// This completes the tutorial here. Try experimenting with different values to get a better understanding.
+var audioContext = new webkitAudioContext();
+  audioContext.sampleRate = 44100;
+  var Sound = {
+  initialize: function(){
+    this.osc = audioContext.createOscillator();
+    this.osc.noteOn(0);
+    this.gainNode = audioContext.createGain();
+    this.gainNode.gain.value = 0;
+    this.osc.connect(this.gainNode);
+    this.gainNode.connect(audioContext.destination);
+  },
+  makeSound: function(pitch, wave, duration){
+    var now = audioContext.currentTime;
+    this.osc.frequency.setValueAtTime(pitch, now);
+    ball.amp = 1;
+    this.gainNode.gain.setValueAtTime(ball.amp, now);
+  },
+  stopSound: function(duration){
+    var offTime = now + duration;
+    this.gainNode.gain.setValueAtTime(0, offTime);
+  }
+}
 
-// Also, try playing with the x-component of velocity ;)
+  var newSound0 = Object.create(Sound);
+  newSound0.initialize();
+  var newSound1 = Object.create(Sound);
+  newSound1.initialize();
+  var newSound2 = Object.create(Sound);
+  newSound2.initialize();
+  var newSound3 = Object.create(Sound);
+  newSound3.initialize();
+
