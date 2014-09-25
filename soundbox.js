@@ -33,7 +33,7 @@ ball = {
 
   // sound components.  Metaphor is ball = sound generator.
   amp: 0,
-  wave: "sawtooth",
+  wave: "sawtooth",  //currently being overridden when ball strikes wall.  Flexibility!
 
   // ball position.  Starting values are center of canvas.
   x: W/2,
@@ -82,7 +82,7 @@ function update() {
     ball.y = H - ball.radius;
     ball.vy *= -bounceFactor;
     // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
-    ballSound0.makeSound(400, ball.wave);
+    ballSound0.makeSound(400, "sawtooth");
     // call sound with pitch assigned to wall object.
   }
   // ceiling rebound
@@ -91,6 +91,8 @@ function update() {
     ball.y = 0 + ball.radius;
     ball.vy *= -bounceFactor;
     // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
+    ballSound0.makeSound(200, "square");
+    // call sound with pitch assigned to wall object.
   }
   // left rebound
   if(ball.x - ball.radius < 0) {
