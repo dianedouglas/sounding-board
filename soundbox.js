@@ -1,4 +1,6 @@
 // Initial box + ball code came from http://cssdeck.com/labs/lets-make-a-bouncing-ball-in-html5-canvas
+// Initial sound code was from http://middleearmedia.com/web-audio-api-basics/
+// Special Thanks to Diane Douglas, Lee Kebler and Jeremy Whitaker
 // No man is an island ;-)
 
 // Create canvas then initialize its 2d context for drawing
@@ -31,7 +33,7 @@ ball = {
 
   // sound components.  Metaphor is ball = sound generator.
   amp: 0,
-
+  wave: "sawtooth",
 
   // ball position.  Starting values are center of canvas.
   x: W/2,
@@ -52,8 +54,8 @@ ball = {
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
-    this.amp = this.amp - .01;
-    newSound0.gainNode.gain.setValueAtTime(this.amp,audioContext.currentTime);
+    this.amp = Math.abs(this.amp - .01);
+    ballSound0.gainNode.gain.setValueAtTime(this.amp,audioContext.currentTime);
   }
 };
 
@@ -80,7 +82,8 @@ function update() {
     ball.y = H - ball.radius;
     ball.vy *= -bounceFactor;
     // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
-    newSound0.makeSound(400, 0, 3);
+    ballSound0.makeSound(400, ball.wave);
+    // call sound with pitch assigned to wall object.
   }
   // ceiling rebound
   if(ball.y - ball.radius < 0) {
@@ -114,29 +117,22 @@ var audioContext = new webkitAudioContext();
   initialize: function(){
     this.osc = audioContext.createOscillator();
     this.osc.noteOn(0);
+    this.osc.type = 'sawtooth';
     this.gainNode = audioContext.createGain();
     this.gainNode.gain.value = 0;
     this.osc.connect(this.gainNode);
     this.gainNode.connect(audioContext.destination);
   },
-  makeSound: function(pitch, wave, duration){
+  makeSound: function(pitch, wave){
     var now = audioContext.currentTime;
+    this.osc.type = wave;
     this.osc.frequency.setValueAtTime(pitch, now);
     ball.amp = 1;
     this.gainNode.gain.setValueAtTime(ball.amp, now);
-  },
-  stopSound: function(duration){
-    var offTime = now + duration;
-    this.gainNode.gain.setValueAtTime(0, offTime);
   }
 }
 
-  var newSound0 = Object.create(Sound);
-  newSound0.initialize();
-  var newSound1 = Object.create(Sound);
-  newSound1.initialize();
-  var newSound2 = Object.create(Sound);
-  newSound2.initialize();
-  var newSound3 = Object.create(Sound);
-  newSound3.initialize();
+  var ballSound0 = Object.create(Sound);
+  ballSound0.initialize();
+
 
