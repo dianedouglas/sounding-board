@@ -1,6 +1,3 @@
-// Special Thanks to Diane Douglas, Lee Kebler and Jeremy Whitaker
-// No man is an island ;-)
-
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext("2d");
 
@@ -9,9 +6,10 @@ var canvasWidth = 450,
 canvas.height = canvasHeight;
 canvas.width = canvasWidth;
 
+var gravity = 0.2;
+
 var ball = {},
-    gravity = 0.0,
-    bounceFactor = 1.0;
+    bounceFactor = 0.9;
 
 ball = {
   // sound components.  Metaphor is ball = sound generator.
@@ -128,8 +126,20 @@ var audioContext = new webkitAudioContext();
   }
 }
 
-  var ballSound0 = Object.create(Sound);
-  ballSound0.initialize();
+var ballSound0 = Object.create(Sound);
+ballSound0.initialize();
+
+
+
+// jQuery EventListeners
+$('#gravOnButton').click(function(){
+  gravity = 0.2;
+});
+
+$('#gravOffButton').click(function(){
+  gravity = 0.0;
+});
+
 
 
 // var clicks = 0;
