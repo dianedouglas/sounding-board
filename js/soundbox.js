@@ -4,21 +4,6 @@ var Ball = {
   // sound components.  Metaphor is ball = sound generator.
   // any of these can be overridden by object settings.
 
-
-  // pitch: 440,
-  // amp: 0,
-  // wave: "sine",
-  // // ball position.  Starting values are center of canvas.
-  // x: 0,
-  // y: 50,
-  // // ball size and color
-  // radius: 15,
-  // color: "red",
-  // bounceFactor: 0.9,
-  // // velocity components
-  // vx: 2,
-  // vy: 2,
-
   initialize: function(pitch, amp, wave, x, y, radius, color, bounceFactor, vx, vy) {
     this.pitch = pitch;
     this.amp = amp;
@@ -47,12 +32,6 @@ var Ball = {
 
 var Line = {
   // line object.  Has start point, end point and we calculate slope
-
-  startX: 0,
-  startY: 0,
-  endX:   0,
-  endY:   0,
-  slope:  0,
 
   initialize: function(startX, startY, endX, endY) {
     this.startX = startX;
@@ -92,6 +71,9 @@ function update(context, canvas, ball, lines, ballSound, gravity) {
   for(i = 0; i < lines.length; i++){
     if(lines[i].isCollision(ball.x, ball.y)){
       //visual rebound stuff here
+      // alert('test')
+      ball.vx *= -1;
+      ball.vy *= -1;
       ballSound.makeSound(200, "square", 1);
       break;
     }
@@ -101,8 +83,8 @@ function update(context, canvas, ball, lines, ballSound, gravity) {
   // //  floor rebound
   // if(ball0.y + ball0.radius > canvasHeight) {
   //   // reposition the ball0 on top of the floor and bounce it
-    // ball0.y = canvasHeight - ball0.radius;
-    // ball0.vy *= -bounceFactor;
+  //   ball0.y = canvasHeight - ball0.radius;
+  //   ball0.vy *= -bounceFactor;
   //   // bounceFactor variable that we created decides the elasticity or how elastic the collision will be. If it's 1, then the collision will be perfectly elastic. If 0, then it will be inelastic.
   //   ballSound0.makeSound(400, "sawtooth", 1);
   //   // call sound with pitch and wave assigned to wall object.
@@ -164,8 +146,8 @@ $(function() {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
 
-  var canvasWidth = 450;
-  var canvasHeight = 450;
+  var canvasWidth = 500;
+  var canvasHeight = 500;
   canvas.height = canvasHeight;
   canvas.width = canvasWidth;
 
