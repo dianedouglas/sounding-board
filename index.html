@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" type="text/css" href="css/soundbox.css">
   <script src="js/jquery-1.11.1.js"></script>
-  </head>
+</head>
+
 <body>
-  <canvas id="canvas"></canvas>
-  <button id="gravOnButton">On</button>
-  <button id="gravOffButton">Off</button>
+  <div class="row">
+    <div class="col-md-4">
+      <h4>Ball Control</h4>
+      <h5>Gravity</h5>
+      <button type="button" class="btn btn-default btn-xs" id="gravOnButton">On</button>
+      <button type="button" class="btn btn-default btn-xs" id="gravOffButton">Off</button>
+    </div>
+    <div class="col-md-4" id="middle-col">
+      <div id="left-label">Left</div>
+      <canvas id="canvas"></canvas>
+      <div id="right-label">Right</div>
+    </div>
+  </div>
   <script src="js/soundbox.js"></script>
-
-
-
-
 </body>
 </html>
+
+<div id="container">
+  <div class="top left"></div>
+  <div class="top right"></div>
+  <div class="bottom left"></div>
+  <div class="bottom right"></div>
+</div>
+
+
+
+
+
+
+
+

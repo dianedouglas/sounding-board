@@ -1,6 +1,33 @@
-/* Some basic styling */
 #canvas {
   display: block;
   border: 1px solid blue;
   margin: 50px auto;
 }
+
+#middle-col {
+  position:relative;
+}
+
+#left-label {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: -5px;
+  top: 200px;
+  -ms-transform: rotate(-90deg); /* IE 9 */
+  -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+  transform: rotate(-90deg);
+}
+
+#right-label {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 440px;
+  top: 220px;
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+  transform: rotate(90deg);
+}
+
+
